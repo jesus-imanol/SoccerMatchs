@@ -1,6 +1,7 @@
 package com.jesuscast.soccer.features.soccerTeam.di
 
 import com.jesuscast.soccer.core.di.AppContainer
+import com.jesuscast.soccer.features.soccerTeam.domain.usecases.GetAvailableCompetitionsUseCase
 import com.jesuscast.soccer.features.soccerTeam.domain.usecases.GetMatchesUseCase
 import com.jesuscast.soccer.features.soccerTeam.domain.usecases.GetSoccerTeamsUseCase
 import com.jesuscast.soccer.features.soccerTeam.presentation.viewmodels.SoccerTeamViewModelFactory
@@ -15,10 +16,15 @@ class SoccerTeamModule( private val appContainer: AppContainer) {
         return GetMatchesUseCase(appContainer.soccerTeamRepository)
     }
 
+    private fun provideGetAvailableCompetitionsUseCase(): GetAvailableCompetitionsUseCase {
+        return GetAvailableCompetitionsUseCase()
+    }
+
     fun provideSoccerTeamViewModelFactory(): SoccerTeamViewModelFactory {
         return SoccerTeamViewModelFactory(
             provideGetSoccerTeamsUseCase(),
-            provideGetMatchesUseCase()
+            provideGetMatchesUseCase(),
+            provideGetAvailableCompetitionsUseCase()
         )
     }
 }

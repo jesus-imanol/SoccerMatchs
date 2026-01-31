@@ -2,6 +2,7 @@ package com.jesuscast.soccer.features.soccerTeam.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jesuscast.soccer.features.soccerTeam.domain.usecases.GetAvailableCompetitionsUseCase
 import com.jesuscast.soccer.features.soccerTeam.domain.usecases.GetMatchesUseCase
 import com.jesuscast.soccer.features.soccerTeam.domain.usecases.GetSoccerTeamsUseCase
 import com.jesuscast.soccer.features.soccerTeam.presentation.screens.SoccerTeamState
@@ -14,13 +15,20 @@ import java.time.format.DateTimeFormatter
 
 class SoccerTeamViewModel(
     private val getSoccerTeamsUseCase: GetSoccerTeamsUseCase,
-    private val getMatchesUseCase: GetMatchesUseCase
+    private val getMatchesUseCase: GetMatchesUseCase,
+    private val getAvailableCompetitionsUseCase: GetAvailableCompetitionsUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SoccerTeamState())
     val uiState = _uiState.asStateFlow()
 
     init {
+        loadAvailableCompetitions()
         loadMatches()
+    }
+
+    private fun loadAvailableCompetitions() {
+        val competitions = getAvailableCompetitionsUseCase()
+        _uiState.update { it.copy(availableCompetitions = competitions) }
     }
 
     fun loadTodayMatches() {

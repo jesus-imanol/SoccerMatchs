@@ -55,19 +55,6 @@ private enum class SelectedDay {
     TODAY, TOMORROW, CUSTOM
 }
 
-// Competiciones populares con sus códigos
-private data class Competition(val name: String, val code: String)
-
-private val POPULAR_COMPETITIONS = listOf(
-    Competition("All", ""),
-    Competition("Premier League", "PL"),
-    Competition("La Liga", "PD"),
-    Competition("Bundesliga", "BL1"),
-    Competition("Serie A", "SA"),
-    Competition("Ligue 1", "FL1"),
-    Competition("Champions League", "CL"),
-    Competition("Europa League", "EL")
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +84,6 @@ fun SoccerTeamsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Date selector buttons
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -105,7 +91,7 @@ fun SoccerTeamsScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 if (selectedDay == SelectedDay.TODAY) {
-                    Button(onClick = { /* Already selected */ }) { Text("Today") }
+                    Button(onClick = {  }) { Text("Today") }
                 } else {
                     OutlinedButton(onClick = {
                         selectedDay = SelectedDay.TODAY
@@ -141,7 +127,7 @@ fun SoccerTeamsScreen(
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                POPULAR_COMPETITIONS.forEach { competition ->
+                uiState.availableCompetitions.forEach { competition ->
                     FilterChip(
                         selected = when {
                             competition.code.isEmpty() -> uiState.selectedCompetition == null
@@ -200,7 +186,6 @@ fun SoccerTeamsScreen(
         }
     }
 
-    // Date Picker Dialog
     if (showDatePicker) {
         val datePickerState = rememberDatePickerState(
             initialSelectedDateMillis = uiState.selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
